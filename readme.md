@@ -99,6 +99,7 @@ How To use
 
 
 Facebook 
+-----------------------------------
 
 => login to your faacebook account -> From left menu in home screen select Manage app
 								   ->Add a New App
@@ -121,6 +122,8 @@ Facebook
 
 
 Google
+----------------------------------
+
 => Go on  <a href="https://console.developers.google.com/">https://console.developers.google.com/</a>
 => select Credentials from left side -> select OAuth consent screen
 									 -> Enter Email Address 	
