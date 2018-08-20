@@ -1,0 +1,32 @@
+@media only screen and (min-width: 800px) {
+    .custom-css
+	{
+		width:30%;
+	}
+	.head-font
+	{
+		font-size:30px;
+	}
+}
+@media only screen and (max-width: 800px) {
+    .custom-css
+	{
+		width:90%;
+	}
+	.head-font
+	{
+		font-size:20px;
+	}
+}
+
+.fa {
+  padding: 10px;
+  font-size: 15px;
+  text-align: center;
+  text-decoration: none;
+  
+}
+.fa-facebook {
+  background: #3B5998;
+  color: white;
+}
