@@ -60,8 +60,7 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
                         
                         $limitCnt=100;   
                         $offsetcnt=0;
-                        $wmax = 1500;
-                        $hmax = 1000;
+                       
                         //get first 100 images (only for loop until last result)
                         $response = $fb->get('/'.$album_detail[1].'/photos?limit='.$limitCnt,$_SESSION['fb_access_token']);
                         $pagesEdge = $response->getGraphEdge();
@@ -71,7 +70,7 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
                              do { 
                                    
                                     //each time get 100 images using offset and limit
-                                    $responseImg = $fb->get('/'.$album_detail[1].'/photos?fields=images,id&limit='.$limitCnt.'&offset='.$offsetcnt,$_SESSION['fb_access_token']);
+                                    $responseImg = $fb->get('/'.$album_detail[1].'/photos?fields=source&limit='.$limitCnt.'&offset='.$offsetcnt,$_SESSION['fb_access_token']);
                                     $graphNodeImg = $responseImg->getGraphEdge();
                                  
                                      $resultImg = json_decode($graphNodeImg);
@@ -80,7 +79,7 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
                                        
                                       foreach($resultImg as $mydata1)
                                       {
-                                                 $url = $mydata1->images[0]->source;
+                                                 $url = $mydata1->source;
                                                  $img = $mydata1->id.".png";
                                                 
                                                 //put image inside sub folder 
@@ -90,10 +89,7 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
                                                     ));
                                                      
                                                         
-                                                     $urlPath="libs/albums_download/".$img;
-                                                     img_resize($url,$urlPath , $wmax, $hmax, "png");
-                                                     
-                                                     $content = file_get_contents($urlPath);
+                                                     $content = file_get_contents($url);
 
                                                      $file = $service->files->create($fileMetadata, array(
                                                     'data' => $content,'mimeType' => 'image/jpeg',
@@ -116,27 +112,6 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
     echo "login_failed";    
 }
 
-function img_resize($target, $newcopy, $w, $h, $ext) {
-    list($w_orig, $h_orig) = getimagesize($target);
-    $scale_ratio = $w_orig / $h_orig;
-    
-    if (($w / $h) > $scale_ratio) {
-           $w = $h * $scale_ratio;
-    } else {
-           $h = $w / $scale_ratio;
-    }
-    $img = "";
-    $ext = strtolower($ext);
-    if ($ext == "gif"){ 
-      $img = imagecreatefromgif($target);
-    } else if($ext =="png"){ 
-      $img = imagecreatefrompng($target);
-    } else { 
-      $img = imagecreatefromjpeg($target);
-    }
-    $tci = imagecreatetruecolor($w, $h);
-    
-    imagecopyresampled($tci, $img, 0, 0, 0, 0, $w, $h, $w_orig, $h_orig);
-    imagejpeg($tci, $newcopy, 80);
-}
+
+
 ?>
