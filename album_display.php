@@ -13,7 +13,7 @@
   		     $fb = new Facebook\Facebook(['app_id' => $app_id, 'app_secret' => $app_secret,'default_graph_version' => 'v2.2',]);
              
              //get first 100 images (only for loop until last result)
-             $response = $fb->get('/'.$_GET['albumid'].'/photos?fields=source&limit='.$limitCnt,$accessToken);
+             $response = $fb->get('/'.$_GET['albumid'].'/photos?fields=images,id&limit='.$limitCnt,$accessToken);
             
               $pagesEdge = $response->getGraphEdge();
              
@@ -23,7 +23,7 @@
                 do { 
                      
                      //each time get 100 images using offset and limit
-                        $responseImg = $fb->get('/'.$_GET['albumid'].'/photos?fields=source&limit='.$limitCnt.'&offset='.$offsetcnt,$accessToken);
+                        $responseImg = $fb->get('/'.$_GET['albumid'].'/photos?fields=images,id&limit='.$limitCnt.'&offset='.$offsetcnt,$accessToken);
                         $graphNodeImg = $responseImg->getGraphEdge();
                      
                          $resultImg = json_decode($graphNodeImg);
@@ -32,7 +32,7 @@
                          {
                            
                              $myObj = new stdClass();
-                             $myObj->source = $mydata->source;
+                             $myObj->source =  $mydata->images[0]->source;
                              $myObj->id = $mydata->id;
                              array_push($all_img,$myObj);
                          }
