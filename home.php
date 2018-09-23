@@ -495,7 +495,7 @@ function myAlbumPhoto(albumid)
                                                     html1+='<div class="slide">';
                                                         html1+='<div class="layer">';
                                                             html1+='<div >';
-                                                                html1+='<img src="'+obj[i].source+'" style="opacity: 1 !important;width: 100%;height: 600px; ">';
+                                                                html1+='<img src="'+obj[i].source+'" style="object-position: 70% 30%; object-fit: cover;opacity: 1 !important;width: 100%;height: 600px; ">';
                                                                 html1+="<div class='w3-display-bottomleft albumtotal' ><div class='album_displaytotal'>";
                                                                 html1+= i+1+" of "+count;
                                                                 html1+="</div></div>";
