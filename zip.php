@@ -48,26 +48,27 @@
                               $offsetcnt=0;
                             
                             //get first 100 images (only for loop until last result)
-                              $response = $fb->get('/'.$album_detail[1].'/photos?fields=source&limit='.$limitCnt,$accessToken);
+                              $response = $fb->get('/'.$album_detail[1].'/photos?fields=images,id&limit='.$limitCnt,$accessToken);
                               $pagesEdge = $response->getGraphEdge();
                             
-                                 
+                                $wmax = 1500;
+                                $hmax = 1000; 
                                 // loop until next node found in responce                            
                                 do { 
                                     
                                         //each time get 100 images using offset and limit
-                                        $responseImg = $fb->get('/'.$album_detail[1].'/photos?fields=source&limit='.$limitCnt.'&offset='.$offsetcnt,$accessToken);
+                                        $responseImg = $fb->get('/'.$album_detail[1].'/photos?fields=images,id&limit='.$limitCnt.'&offset='.$offsetcnt,$accessToken);
                                         $graphNodeImg = $responseImg->getGraphEdge();
                                      
                                          $resultImg = json_decode($graphNodeImg);
                 
                                          foreach($resultImg as $mydatas)
                                          {
-                                             $url = $mydatas->source;
+                                              $url = $mydatas->images[0]->source;
                                               $img = $mydatas->id.".png";
 
                                               //put image according to albums
-                                             file_put_contents($final_path."/".$img, file_get_contents($url));
+                                             img_resize($url, $resized_file, $wmax, $hmax, "png");
                                          }
                                       $offsetcnt=$offsetcnt+100;
                                 } while ( $pagesEdge = $fb->next($pagesEdge));
@@ -150,5 +151,32 @@
             
                 return $zip->close();
             }
+
+
+//Image Resize function
+function img_resize($target, $newcopy, $w, $h, $ext) {
+    list($w_orig, $h_orig) = getimagesize($target);
+    $scale_ratio = $w_orig / $h_orig;
+    
+    //define new height and width according to original image height and width
+    if (($w / $h) > $scale_ratio) {
+           $w = $h * $scale_ratio;
+    } else {
+           $h = $w / $scale_ratio;
+    }
+    $img = "";
+    $ext = strtolower($ext);
+    if ($ext == "gif"){ 
+      $img = imagecreatefromgif($target);
+    } else if($ext =="png"){ 
+      $img = imagecreatefrompng($target);
+    } else { 
+      $img = imagecreatefromjpeg($target);
+    }
+    $tci = imagecreatetruecolor($w, $h);
+    
+    imagecopyresampled($tci, $img, 0, 0, 0, 0, $w, $h, $w_orig, $h_orig);
+    imagejpeg($tci, $newcopy, 80);
+}
 ?>
     
